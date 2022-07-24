@@ -9,6 +9,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.batmanproject.Models.Movie
+import com.example.batmanproject.Models.Search
 import com.example.batmanproject.MovieApplication
 import com.example.batmanproject.Utils.Resource
 import com.example.batmanproject.repository.MovieRepasitory
@@ -20,7 +21,7 @@ class MovieViewModel(
     val movieRepasitory : MovieRepasitory
 ) : AndroidViewModel(app) {
 
-    val movieBatman : MutableLiveData<Resource<Movie>> = MutableLiveData()
+    val movieBatman : MutableLiveData<Resource<Search>> = MutableLiveData()
 
     fun getBreakingNews() = viewModelScope.launch {
         safeBreakingNewsCall()
