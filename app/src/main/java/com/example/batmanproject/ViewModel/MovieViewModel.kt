@@ -8,12 +8,14 @@ import android.os.Build
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.batmanproject.Models.DetailMovie.DetailMovie
 import com.example.batmanproject.Models.Movie
 import com.example.batmanproject.Models.Search
 import com.example.batmanproject.MovieApplication
 import com.example.batmanproject.Utils.Resource
 import com.example.batmanproject.repository.MovieRepasitory
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 import okio.IOException
 import retrofit2.Response
 
@@ -26,11 +28,35 @@ class MovieViewModel(
     var breakingMoviePage = 1
     var breakingMovieResponse: Movie? = null
 
+    val detailMovie : MutableLiveData<Resource<DetailMovie>> = MutableLiveData()
+    var detailMoviePage = 1
+    var detailMovieResponse: DetailMovie? = null
+
 
 
     fun getBatman() = viewModelScope.launch {
         safeBreakingNewsCall()
+    }
 
+    fun getDetailMovie(select: String) = viewModelScope.launch {
+        getSelectMovie(select)
+    }
+
+    private suspend fun getSelectMovie(select: String) {
+        detailMovie.postValue(Resource.Loading())
+        try {
+            if (hasInternetConnection()){
+                val response = movieRepasitory.getDetailMovie(select)
+                detailMovie.postValue(handleBreakingNewsResponse(response))
+            } else {
+                detailMovie.postValue(Resource.Error("no internet connection"))
+            }
+        } catch (T:Throwable){
+            when(T){
+                is IOException -> detailMovie.postValue(Resource.Error("internet is failure"))
+                else -> detailMovie.postValue(Resource.Error("conversion error"))
+            }
+        }
     }
 
     private fun handleBreakingNewsResponse(response: Response<Movie>) : Resource<Movie>{
@@ -42,6 +68,24 @@ class MovieViewModel(
                 }else {
                     val oldArticle = breakingMovieResponse?.Search
                     val newArticle = resultResponse.Search
+                    oldArticle?.addAll(newArticle)
+                }
+                return Resource.Success(breakingMovieResponse ?: resultResponse)
+            }
+        }
+        return Resource.Error(response.message())
+    }
+
+
+    private fun handleDetailResponse(response: Response<DetailMovie>) : Resource<DetailMovie>{
+        if (response.isSuccessful){
+            response.body()?.let { resultResponse ->
+                detailMoviePage++
+                if (detailMovieResponse == null){
+                    detailMovieResponse = resultResponse
+                }else {
+                    val oldArticle = detailMovieResponse?.Actors
+                    val newArticle = resultResponse.Response
                     oldArticle?.addAll(newArticle)
                 }
                 return Resource.Success(breakingMovieResponse ?: resultResponse)
