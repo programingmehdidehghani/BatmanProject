@@ -8,8 +8,7 @@ import retrofit2.http.Query
 interface MovieApi {
 
     @GET("?apikey=3e974fca&s=batman")
-    suspend fun getBreakingNews(
-
+    suspend fun getBatmanMovie(
     ) : Response<Movie>
 
 }
