@@ -42,6 +42,10 @@ class MovieViewModel(
         getSelectMovie(select)
     }
 
+    fun saveMovie(movie: Movie) = viewModelScope.launch {
+        movieRepasitory.insertDb(movie)
+    }
+
     private suspend fun getSelectMovie(select: String) {
         detailMovie.postValue(Resource.Loading())
         try {
