@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.batmanproject.Models.Movie
 import com.example.batmanproject.Models.Search
 import com.example.batmanproject.R
 import kotlinx.android.synthetic.main.item_movie.view.*

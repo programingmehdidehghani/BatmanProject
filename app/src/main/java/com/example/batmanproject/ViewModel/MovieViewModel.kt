@@ -15,6 +15,7 @@ import com.example.batmanproject.Utils.Resource
 import com.example.batmanproject.repository.MovieRepasitory
 import kotlinx.coroutines.launch
 import okio.IOException
+import retrofit2.Response
 
 class MovieViewModel(
     app : Application,
@@ -22,18 +23,40 @@ class MovieViewModel(
 ) : AndroidViewModel(app) {
 
     val movieBatman : MutableLiveData<Resource<Search>> = MutableLiveData()
+    var breakingMoviePage = 1
+    var breakingMovieResponse: Movie? = null
 
-    fun getBreakingNews() = viewModelScope.launch {
+
+
+    fun getBatman() = viewModelScope.launch {
         safeBreakingNewsCall()
 
     }
+
+    private fun handleBreakingNewsResponse(response: Response<Movie>) : Resource<Movie>{
+        if (response.isSuccessful){
+            response.body()?.let { resultResponse ->
+                breakingMoviePage++
+                if (breakingMovieResponse == null){
+                    breakingMovieResponse = resultResponse
+                }else {
+                    val oldArticle = breakingMovieResponse?.Search
+                    val newArticle = resultResponse.Search
+                    oldArticle?.addAll(newArticle)
+                }
+                return Resource.Success(breakingMovieResponse ?: resultResponse)
+            }
+        }
+        return Resource.Error(response.message())
+    }
+
 
     private suspend fun safeBreakingNewsCall(){
         movieBatman.postValue(Resource.Loading())
         try {
            if (hasInternetConnection()){
               val response = movieRepasitory.getBatmanMovie()
-               movieBatman.postValue(hasInternetConnection(response))
+               movieBatman.postValue(handleBreakingNewsResponse(response))
            } else {
                movieBatman.postValue(Resource.Error("no internet connection"))
            }
