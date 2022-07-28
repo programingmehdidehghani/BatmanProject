@@ -4,14 +4,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.AbsListView
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.batmanproject.Utils.Constants.Companion.QUERY_PAGE_SIZE
 import com.example.batmanproject.Utils.Resource
 import com.example.batmanproject.ViewModel.MovieViewModel
 import com.example.batmanproject.ViewModel.NewsViewModelProviderFactory
@@ -42,6 +38,7 @@ class MainActivity : AppCompatActivity() {
                     hideProgressBar()
                     response.data?.let { newsResponse ->
                         movieAdapter.differ.submitList(newsResponse.Search)
+                        viewModel.saveMovie(newsResponse.Search)
                     }
                 }
                 is Resource.Error -> {

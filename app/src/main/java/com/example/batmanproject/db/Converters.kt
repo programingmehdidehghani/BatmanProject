@@ -7,12 +7,12 @@ import com.example.batmanproject.Models.Search
 class Converters {
 
     @TypeConverter
-    fun fromSource(source: Movie) : List<Search>{
+    fun fromSource(source: Movie) : MutableList<Search>{
         return source.Search
     }
 
     @TypeConverter
     fun toSource(name : String) : Search {
-        return Search(name,name,name,name,name)
+        return Search(0,name,name,name,name,name)
     }
 }

@@ -10,7 +10,7 @@ import com.example.batmanproject.Models.Search
 
 
 @Database(
-    entities = [Movie::class],
+    entities = [Search::class],
     version = 1
 )
 @TypeConverters(Converters::class)

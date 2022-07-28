@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.batmanproject.Models.DetailMovie.DetailMovie
 import com.example.batmanproject.Models.Movie
+import com.example.batmanproject.Models.Search
 import com.example.batmanproject.MovieApplication
 import com.example.batmanproject.Utils.Resource
 import com.example.batmanproject.repository.MovieRepasitory
@@ -40,7 +41,7 @@ class MovieViewModel(
         getSelectMovie(select)
     }*/
 
-    fun saveMovie(search: Movie) = viewModelScope.launch {
+    fun saveMovie(search: MutableList<Search>) = viewModelScope.launch {
         movieRepasitory.insertDb(search)
     }
 
@@ -77,7 +78,6 @@ class MovieViewModel(
                     val oldArticle = breakingMovieResponse?.Search
                     val newArticle = resultResponse.Search
                     oldArticle?.addAll(newArticle)
-                    saveMovie(resultResponse)
                 }
                 return Resource.Success(breakingMovieResponse ?: resultResponse)
             }

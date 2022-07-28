@@ -13,9 +13,9 @@ import com.example.batmanproject.Models.Search
 interface MovieDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsert(search: Movie) : Long
+    suspend fun upsert(search: Search) : Long
 
-    @Query("SELECT * FROM movies")
-    fun getAllArticles() : LiveData<List<Movie>>
+    @Query("SELECT * FROM searches")
+    fun getAllArticles() : LiveData<List<Search>>
 
 }
