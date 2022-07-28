@@ -6,15 +6,17 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.batmanproject.Models.Movie
+import com.example.batmanproject.Models.Search
 
 
+/*
 @Dao
 interface MovieDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsert(article: Movie) : Long
+    suspend fun upsert(article: Search) : Long
 
     @Query("SELECT * FROM movies")
-    fun getAllArticles() : LiveData<List<Movie>>
+    fun getAllArticles() : LiveData<List<Search>>
 
-}
+}*/

@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.batmanproject.Models.Movie
 import com.example.batmanproject.Models.Search
 import com.example.batmanproject.R
 import kotlinx.android.synthetic.main.item_movie.view.*
@@ -18,7 +17,7 @@ class MovieAdapter : RecyclerView.Adapter<MovieAdapter.ArticleViewHolder>() {
 
     private val differCallback = object : DiffUtil.ItemCallback<Search>(){
         override fun areItemsTheSame(oldItem: Search, newItem: Search): Boolean {
-            return oldItem.Poster == newItem.Poster
+            return oldItem.Title == newItem.Title
         }
 
         override fun areContentsTheSame(oldItem: Search, newItem: Search): Boolean {

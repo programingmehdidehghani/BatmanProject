@@ -2,6 +2,7 @@ package com.example.batmanproject
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.AbsListView
 import android.widget.Toast
@@ -27,21 +28,19 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val newsRepository = MovieRepasitory(MovieDataBase(this))
+        val newsRepository = MovieRepasitory()
         val viewModelProviderFactory = NewsViewModelProviderFactory(application , newsRepository)
         viewModel = ViewModelProvider(this, viewModelProviderFactory).get(MovieViewModel::class.java)
-
-        viewModel.movieBatman.observe(viewLifecycleOwner , Observer { response ->
+        setupRecyclerView()
+        Log.i("tag","recycler view")
+        viewModel.movieBatman.observe(this@MainActivity , Observer { response ->
+            Log.i("tag","view model is call")
             when(response){
                 is Resource.Success -> {
                     hideProgressBar()
                     response.data?.let { newsResponse ->
-                        movieAdapter.differ.submitList(newsResponse)
-                        val totalPages =newsResponse.imdbID / QUERY_PAGE_SIZE + 2
-                        isLastPage = viewModel.breakingMoviePage == totalPages
-                        if(isLastPage){
-                            rvBatmanMovie.setPadding(0,0,0,0)
-                        }
+                        movieAdapter.differ.submitList(newsResponse.Search)
+
                     }
                 }
                 is Resource.Error -> {
@@ -72,35 +71,6 @@ class MainActivity : AppCompatActivity() {
         isLoading = true
     }
 
-    val scrollListener = object : RecyclerView.OnScrollListener(){
-        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-            super.onScrolled(recyclerView, dx, dy)
-            val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-            val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
-            val visibleItemCount = layoutManager.childCount
-            val totalItemCount = layoutManager.itemCount
-
-            val isNotLoadingAndNotLastPage = !isLoading && !isLastPage
-            val isAtLastItem = firstVisibleItemPosition + visibleItemCount >= totalItemCount
-            val isNotAtBeginning = firstVisibleItemPosition >= 0
-            val isTotalMoreThanVisible = totalItemCount >= QUERY_PAGE_SIZE
-            val shouldPaginate = isNotLoadingAndNotLastPage && isAtLastItem && isNotAtBeginning &&
-                    isTotalMoreThanVisible && isScrolling
-            if (shouldPaginate){
-                viewModel.getBatman()
-                isScrolling = false
-            }else {
-                rvBatmanMovie.setPadding(0,0,0,0)
-            }
-        }
-
-        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-            super.onScrollStateChanged(recyclerView, newState)
-            if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL){
-                isScrolling = true
-            }
-        }
-    }
 
 
     private fun setupRecyclerView(){
@@ -108,7 +78,6 @@ class MainActivity : AppCompatActivity() {
         rvBatmanMovie.apply {
             adapter = movieAdapter
             layoutManager = LinearLayoutManager(this@MainActivity)
-            addOnScrollListener(this@MainActivity.scrollListener)
         }
     }
 }

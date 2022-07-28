@@ -24,7 +24,7 @@ class MovieViewModel(
     val movieRepasitory : MovieRepasitory
 ) : AndroidViewModel(app) {
 
-    val movieBatman : MutableLiveData<Resource<Search>> = MutableLiveData()
+    val movieBatman : MutableLiveData<Resource<Movie>> = MutableLiveData()
     var breakingMoviePage = 1
     var breakingMovieResponse: Movie? = null
 
@@ -38,14 +38,15 @@ class MovieViewModel(
         safeBreakingNewsCall()
     }
 
-    fun getDetailMovie(select: String) = viewModelScope.launch {
+   /* fun getDetailMovie(select: String) = viewModelScope.launch {
         getSelectMovie(select)
-    }
+    }*/
 
-    fun saveMovie(movie: Movie) = viewModelScope.launch {
+  /*  fun saveMovie(movie: Movie) = viewModelScope.launch {
         movieRepasitory.insertDb(movie)
-    }
+    }*/
 
+/*
     private suspend fun getSelectMovie(select: String) {
         detailMovie.postValue(Resource.Loading())
         try {
@@ -62,6 +63,7 @@ class MovieViewModel(
             }
         }
     }
+*/
 
     private fun handleBreakingNewsResponse(response: Response<Movie>) : Resource<Movie>{
         if (response.isSuccessful){
@@ -81,7 +83,7 @@ class MovieViewModel(
     }
 
 
-    private fun handleDetailResponse(response: Response<DetailMovie>) : Resource<DetailMovie>{
+/*    private fun handleDetailResponse(response: Response<DetailMovie>) : Resource<DetailMovie>{
         if (response.isSuccessful){
             response.body()?.let { resultResponse ->
                 detailMoviePage++
@@ -96,7 +98,7 @@ class MovieViewModel(
             }
         }
         return Resource.Error(response.message())
-    }
+    }*/
 
 
     private suspend fun safeBreakingNewsCall(){
