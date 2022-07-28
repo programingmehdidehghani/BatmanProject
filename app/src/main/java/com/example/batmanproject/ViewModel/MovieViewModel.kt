@@ -10,12 +10,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.batmanproject.Models.DetailMovie.DetailMovie
 import com.example.batmanproject.Models.Movie
-import com.example.batmanproject.Models.Search
 import com.example.batmanproject.MovieApplication
 import com.example.batmanproject.Utils.Resource
 import com.example.batmanproject.repository.MovieRepasitory
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.plus
 import okio.IOException
 import retrofit2.Response
 
@@ -42,7 +40,7 @@ class MovieViewModel(
         getSelectMovie(select)
     }*/
 
-    fun saveMovie(search: Search) = viewModelScope.launch {
+    fun saveMovie(search: Movie) = viewModelScope.launch {
         movieRepasitory.insertDb(search)
     }
 
@@ -79,6 +77,7 @@ class MovieViewModel(
                     val oldArticle = breakingMovieResponse?.Search
                     val newArticle = resultResponse.Search
                     oldArticle?.addAll(newArticle)
+                    saveMovie(resultResponse)
                 }
                 return Resource.Success(breakingMovieResponse ?: resultResponse)
             }
@@ -113,6 +112,7 @@ class MovieViewModel(
                movieBatman.postValue(handleBreakingNewsResponse(response))
            } else {
                movieBatman.postValue(Resource.Error("no internet connection"))
+               getAllMovie()
            }
         } catch (T:Throwable){
             when(T){

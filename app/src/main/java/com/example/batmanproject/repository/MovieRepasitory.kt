@@ -15,7 +15,7 @@ class MovieRepasitory(
 //    suspend fun getDetailMovie(imdbID : String) =
 //        RetrofitInstance.api.getDetailMovie(imdbID)
 
-    suspend fun insertDb(search: Search) = db.getArticleDao().upsert(search)
+    suspend fun insertDb(search: Movie) = db.getArticleDao().upsert(search)
 
     fun getMovieFromDd() = db.getArticleDao().getAllArticles()
 
