@@ -42,9 +42,13 @@ class MovieViewModel(
         getSelectMovie(select)
     }*/
 
-  /*  fun saveMovie(movie: Movie) = viewModelScope.launch {
-        movieRepasitory.insertDb(movie)
-    }*/
+    fun saveMovie(search: Search) = viewModelScope.launch {
+        movieRepasitory.insertDb(search)
+    }
+
+    fun getAllMovie() {
+        movieRepasitory.getMovieFromDd()
+    }
 
 /*
     private suspend fun getSelectMovie(select: String) {

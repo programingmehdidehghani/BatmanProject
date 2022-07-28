@@ -5,15 +5,16 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.batmanproject.Models.Movie
+import com.example.batmanproject.Models.Search
 
 
-/*@Database(
-    entities = [Movie::class],
+@Database(
+    entities = [Search::class],
     version = 1
-)*/
+)
 abstract class MovieDataBase : RoomDatabase() {
 
-   // abstract fun getArticleDao() : MovieDao
+    abstract fun getArticleDao() : MovieDao
 
     companion object{
         @Volatile

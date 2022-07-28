@@ -9,14 +9,13 @@ import com.example.batmanproject.Models.Movie
 import com.example.batmanproject.Models.Search
 
 
-/*
 @Dao
 interface MovieDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsert(article: Search) : Long
+    suspend fun upsert(search: Search) : Long
 
-    @Query("SELECT * FROM movies")
+    @Query("SELECT * FROM searches")
     fun getAllArticles() : LiveData<List<Search>>
 
-}*/
+}

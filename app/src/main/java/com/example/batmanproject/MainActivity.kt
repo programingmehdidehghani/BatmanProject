@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val newsRepository = MovieRepasitory()
+        val newsRepository = MovieRepasitory(MovieDataBase(this))
         val viewModelProviderFactory = NewsViewModelProviderFactory(application , newsRepository)
         viewModel = ViewModelProvider(this, viewModelProviderFactory).get(MovieViewModel::class.java)
         setupRecyclerView()
@@ -42,7 +42,6 @@ class MainActivity : AppCompatActivity() {
                     hideProgressBar()
                     response.data?.let { newsResponse ->
                         movieAdapter.differ.submitList(newsResponse.Search)
-
                     }
                 }
                 is Resource.Error -> {
