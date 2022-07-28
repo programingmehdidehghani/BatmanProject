@@ -8,6 +8,7 @@ import android.widget.AbsListView
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.batmanproject.Utils.Constants.Companion.QUERY_PAGE_SIZE
@@ -33,7 +34,8 @@ class MainActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this, viewModelProviderFactory).get(MovieViewModel::class.java)
         setupRecyclerView()
         Log.i("tag","recycler view")
-        viewModel.movieBatman.observe(this@MainActivity , Observer { response ->
+        viewModel.getBatman()
+        viewModel.movieBatman.observe(this@MainActivity,Observer{response ->
             Log.i("tag","view model is call")
             when(response){
                 is Resource.Success -> {
@@ -53,7 +55,9 @@ class MainActivity : AppCompatActivity() {
                     showProgressBar()
                 }
             }
+
         })
+
     }
 
     var isLoading = false
