@@ -12,6 +12,7 @@ import com.example.batmanproject.Utils.Resource
 import com.example.batmanproject.ViewModel.MovieViewModel
 import com.example.batmanproject.ViewModel.NewsViewModelProviderFactory
 import com.example.batmanproject.adapter.MovieAdapter
+import com.example.batmanproject.adapter.SelectAdapter
 import com.example.batmanproject.db.MovieDataBase
 import com.example.batmanproject.repository.MovieRepasitory
 import kotlinx.android.synthetic.main.activity_main.*
@@ -21,6 +22,7 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var viewModel: MovieViewModel
     lateinit var movieAdapter: MovieAdapter
+    lateinit var selectAdapter: SelectAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +39,7 @@ class MainActivity : AppCompatActivity() {
                 is Resource.Success -> {
                     hideProgressBar()
                     response.data?.let { newsResponse ->
+                        rvBatmanMovie.visibility = View.VISIBLE
                         movieAdapter.differ.submitList(newsResponse.Search)
                         viewModel.saveMovie(newsResponse.Search)
                     }
@@ -53,6 +56,32 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
+
+        movieAdapter.setOnItemClickListener { search ->
+            viewModel.getDetailMovie(search.imdbID)
+            viewModel.detailMovie.observe(this@MainActivity,Observer{ response ->
+                Log.i("tag","view model is call")
+                when(response){
+                    is Resource.Success -> {
+                        hideProgressBar()
+                        response.data?.let { newsResponse ->
+                            rvBatmanMovie.visibility = View.GONE
+                            setupAdapterSelect()
+                            selectAdapter.differ.submitList(newsResponse)
+                        }
+                    }
+                    is Resource.Error -> {
+                        hideProgressBar()
+                        response.message?.let { message ->
+                            Toast.makeText(this, "An error occured: $message", Toast.LENGTH_LONG).show()
+                        }
+                    }
+                    is Resource.Loading -> {
+                        showProgressBar()
+                    }
+                }
+            })
+        }
 
     }
 
@@ -80,4 +109,14 @@ class MainActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(this@MainActivity)
         }
     }
+
+    private fun setupAdapterSelect(){
+        selectAdapter = SelectAdapter()
+        rvSelectMovie.apply {
+            adapter = selectAdapter
+            layoutManager = LinearLayoutManager(this@MainActivity)
+        }
+    }
 }
+
+
