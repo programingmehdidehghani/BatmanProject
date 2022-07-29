@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.batmanproject.Models.DetailMovie.DetailMovie
-import com.example.batmanproject.Models.Search
 import com.example.batmanproject.R
 import kotlinx.android.synthetic.main.item_movie.view.*
 
@@ -42,13 +41,13 @@ class SelectAdapter : RecyclerView.Adapter<SelectAdapter.SelectViewHolder> (){
 
 
     override fun onBindViewHolder(holder: SelectViewHolder, position: Int) {
-        val search = differ.currentList[position]
+        val detailMovie = differ.currentList[position]
         holder.itemView.apply {
-            Glide.with(this).load(search.Poster).into(ivArticleImage)
-            tvSource.text = search.Type
-            tvTitle.text = search.Title
-            tvDescription.text = search.Year
-            tvPublishedAt.text = search.imdbID
+            Glide.with(this).load(detailMovie.Poster).into(ivArticleImage)
+            tvSource.text = detailMovie.Type
+            tvTitle.text = detailMovie.Title
+            tvDescription.text = detailMovie.Year
+            tvPublishedAt.text = detailMovie.imdbID
 
 
         }
