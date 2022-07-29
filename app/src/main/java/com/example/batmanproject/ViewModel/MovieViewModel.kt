@@ -6,6 +6,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.batmanproject.Models.DetailMovie.DetailMovie
@@ -24,6 +25,7 @@ class MovieViewModel(
 ) : AndroidViewModel(app) {
 
     val movieBatman : MutableLiveData<Resource<Movie>> = MutableLiveData()
+    val movieBatmanOffline : MutableLiveData<List<Search>> = MutableLiveData()
     var breakingMoviePage = 1
     var breakingMovieResponse: Movie? = null
 
@@ -37,25 +39,24 @@ class MovieViewModel(
         safeBreakingNewsCall()
     }
 
-   /* fun getDetailMovie(select: String) = viewModelScope.launch {
+    fun getDetailMovie(select: String) = viewModelScope.launch {
         getSelectMovie(select)
-    }*/
+    }
 
     fun saveMovie(search: MutableList<Search>) = viewModelScope.launch {
         movieRepasitory.insertDb(search)
     }
 
-    fun getAllMovie() {
-        movieRepasitory.getMovieFromDd()
+    fun getAllMovie() : LiveData<List<Search>>{
+        return movieRepasitory.getMovieFromDd()
     }
 
-/*
     private suspend fun getSelectMovie(select: String) {
         detailMovie.postValue(Resource.Loading())
         try {
             if (hasInternetConnection()){
                 val response = movieRepasitory.getDetailMovie(select)
-                detailMovie.postValue(handleBreakingNewsResponse(response))
+                detailMovie.postValue(handleDetailResponse(response))
             } else {
                 detailMovie.postValue(Resource.Error("no internet connection"))
             }
@@ -66,7 +67,6 @@ class MovieViewModel(
             }
         }
     }
-*/
 
     private fun handleBreakingNewsResponse(response: Response<Movie>) : Resource<Movie>{
         if (response.isSuccessful){
@@ -86,22 +86,21 @@ class MovieViewModel(
     }
 
 
-/*    private fun handleDetailResponse(response: Response<DetailMovie>) : Resource<DetailMovie>{
+    private fun handleDetailResponse(response: Response<DetailMovie>) : Resource<DetailMovie>{
         if (response.isSuccessful){
             response.body()?.let { resultResponse ->
                 detailMoviePage++
                 if (detailMovieResponse == null){
                     detailMovieResponse = resultResponse
                 }else {
-                    val oldArticle = detailMovieResponse?.Actors
-                    val newArticle = resultResponse.Response
-                    oldArticle?.addAll(newArticle)
+                    val oldArticle = detailMovieResponse
+                    val newArticle = resultResponse
                 }
-                return Resource.Success(breakingMovieResponse ?: resultResponse)
+                return Resource.Success(detailMovieResponse ?: resultResponse)
             }
         }
         return Resource.Error(response.message())
-    }*/
+    }
 
 
     private suspend fun safeBreakingNewsCall(){
@@ -111,8 +110,8 @@ class MovieViewModel(
               val response = movieRepasitory.getBatmanMovie()
                movieBatman.postValue(handleBreakingNewsResponse(response))
            } else {
+               var movieItem : LiveData<List<Search>> = getAllMovie()
                movieBatman.postValue(Resource.Error("no internet connection"))
-               getAllMovie()
            }
         } catch (T:Throwable){
             when(T){

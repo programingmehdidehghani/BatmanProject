@@ -1,11 +1,13 @@
 package com.example.batmanproject.Models
 
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 
 @Entity(
-    tableName = "searches"
+    tableName = "searches",
+    indices = [Index(value = ["imdbID"], unique = true)]
 )
 data class Search(
     @PrimaryKey(autoGenerate = true)

@@ -11,8 +11,8 @@ class MovieRepasitory(
     suspend fun getBatmanMovie() =
         RetrofitInstance.api.getBatmanMovie()
 
-//    suspend fun getDetailMovie(imdbID : String) =
-//        RetrofitInstance.api.getDetailMovie(imdbID)
+    suspend fun getDetailMovie(imdbID : String) =
+        RetrofitInstance.api.getDetailMovie(imdbID)
 
     suspend fun insertDb(search: MutableList<Search>) {
         var searchInsert : Search

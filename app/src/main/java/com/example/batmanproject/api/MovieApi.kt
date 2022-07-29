@@ -1,5 +1,6 @@
 package com.example.batmanproject.api
 
+import com.example.batmanproject.Models.DetailMovie.DetailMovie
 import com.example.batmanproject.Models.Movie
 import com.example.batmanproject.Models.Search
 import retrofit2.Response
@@ -16,6 +17,6 @@ interface MovieApi {
     @GET("?apikey=3e974fca&i={imdbID}")
     suspend fun getDetailMovie(
         @Path("imdbID") imdbID : String
-    ) : Response<Movie>
+    ) : Response<DetailMovie>
 
 }
