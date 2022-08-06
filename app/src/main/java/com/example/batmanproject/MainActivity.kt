@@ -5,9 +5,12 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.batmanproject.Models.Search
 import com.example.batmanproject.Utils.Resource
 import com.example.batmanproject.ViewModel.MovieViewModel
 import com.example.batmanproject.ViewModel.NewsViewModelProviderFactory
@@ -47,6 +50,11 @@ class MainActivity : AppCompatActivity() {
                 is Resource.Error -> {
                     hideProgressBar()
                     response.message?.let { message ->
+                        viewModel.getAllMovie().observe(this,Observer{ response ->
+                            paginationProgressBar.visibility = View.INVISIBLE
+                            rvBatmanMovie.visibility = View.VISIBLE
+                            movieAdapter.differ.submitList(response)
+                        })
                         Toast.makeText(this, "An error occured: $message", Toast.LENGTH_LONG).show()
                     }
                 }
@@ -117,6 +125,11 @@ class MainActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(this@MainActivity)
         }
     }
+}
+
+private fun <T> AsyncListDiffer<T>.submitList(newsData: LiveData<List<T>>) {
+
+
 }
 
 
