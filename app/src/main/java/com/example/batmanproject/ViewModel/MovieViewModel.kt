@@ -25,7 +25,6 @@ class MovieViewModel(
 ) : AndroidViewModel(app) {
 
     val movieBatman : MutableLiveData<Resource<Movie>> = MutableLiveData()
-    val movieBatmanOffline : MutableLiveData<LiveData<List<Search>>> = MutableLiveData()
     var breakingMoviePage = 1
     var breakingMovieResponse: Movie? = null
 
@@ -58,7 +57,6 @@ class MovieViewModel(
                 val response = movieRepasitory.getDetailMovie(select)
                 detailMovie.postValue(handleDetailResponse(response))
             } else {
-                var items = getAllMovie()
                 detailMovie.postValue(Resource.Error("no internet connection"))
             }
         } catch (T:Throwable){
@@ -117,9 +115,7 @@ class MovieViewModel(
               val response = movieRepasitory.getBatmanMovie()
                movieBatman.postValue(handleBreakingNewsResponse(response))
            } else {
-               movieBatmanOffline.postValue(getAllMovie())
                movieBatman.postValue(Resource.Error("no internet connection"))
-
            }
         } catch (T:Throwable){
             when(T){

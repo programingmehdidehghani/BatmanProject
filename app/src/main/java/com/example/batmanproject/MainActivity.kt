@@ -127,9 +127,5 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
-private fun <T> AsyncListDiffer<T>.submitList(newsData: LiveData<List<T>>) {
-
-
-}
 
 
